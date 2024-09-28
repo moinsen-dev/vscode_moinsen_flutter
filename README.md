@@ -78,22 +78,70 @@ The Moinsen Flutter extension is implemented with the following key components:
 
 This implementation ensures efficient management of import statements in Flutter projects while providing users with flexibility and control over the process.
 
-## Known Issues
+## Running Tests with Coverage
 
-Please report any issues on the [GitHub repository](https://github.com/moinsen-dev/vscode_moinsen_flutter/issues).
+To run the tests with coverage for this extension, follow these steps:
 
-## Automated Deployment (not yet implemented)
+1. Ensure you have all dependencies installed by running:
+   ```
+   npm install
+   ```
+
+2. Run the tests with coverage using the following command:
+   ```
+   npm run test:coverage
+   ```
+
+3. After the tests complete, you can find the coverage report in the `coverage` directory. Open `coverage/lcov-report/index.html` in a web browser to view a detailed coverage report.
+
+4. The coverage percentage is also displayed in the console output and updated in the README badge automatically.
+
+## Enhancing the Test Fixture Structure
+
+To improve the test fixture structure for this extension, consider the following guidelines:
+
+1. **Organize Fixtures by Feature**: Create subdirectories within the `src/test/fixture` directory for each major feature or component being tested. This helps in maintaining a clear separation of test cases.
+
+2. **Use Descriptive Names**: Name your fixture files and directories clearly to indicate their purpose. For example, `validProjectStructure`, `invalidImports`, or `nestedDirectories`.
+
+3. **Mock Complex Structures**: For testing complex project structures, create mock directory trees that simulate real-world Flutter projects. Include various levels of nesting, ignored folders, and edge cases.
+
+4. **Include Edge Cases**: Prepare fixtures that cover edge cases such as empty directories, files with special characters, or deeply nested structures to ensure robust testing.
+
+5. **Separate Input and Expected Output**: For each test scenario, consider having an "input" directory structure and a corresponding "expected" directory structure. This makes it easier to compare the generated results with the expected outcomes.
+
+6. **Version Control**: Include your test fixtures in version control to ensure consistency across different development environments and to track changes over time.
+
+7. **README for Fixtures**: Consider adding a README.md file in the `src/test/fixture` directory explaining the purpose and structure of your test fixtures. This helps other contributors understand and maintain the test suite.
+
+8. **Realistic Content**: Where applicable, include realistic content in your fixture files. For Dart files, this might mean including basic class or function definitions that reflect typical usage.
+
+9. **Consistency**: Maintain a consistent structure across your fixtures to make it easier for developers to understand and extend the test suite.
+
+By following these guidelines, you can create a more robust and maintainable test fixture structure, which in turn leads to more reliable and comprehensive testing of the Moinsen Flutter extension.
+
+## Deployment
 
 This extension uses GitHub Actions for automated deployment to the VSCode Marketplace. When changes are pushed to the main branch, the following steps are automatically executed:
 
 1. Code checkout
 2. Node.js setup
 3. Dependency installation
-4. Running tests
+4. Running tests with coverage
 5. Creating a release tag
 6. Publishing to the VSCode Marketplace
 
+To deploy a new version:
+
+1. Update the version number in `package.json`.
+2. Commit your changes and push to the main branch.
+3. The GitHub Actions workflow will automatically run tests, create a new release, and publish the extension to the VSCode Marketplace.
+
 This ensures that every release is thoroughly tested and automatically made available to users.
+
+## Known Issues
+
+Please report any issues on the [GitHub repository](https://github.com/moinsen-dev/vscode_moinsen_flutter/issues).
 
 ## Contributing
 

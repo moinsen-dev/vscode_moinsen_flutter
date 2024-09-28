@@ -14,3 +14,4 @@ MEDIUM_BLOG_POST.md
 test/**
 jest.config.js
 coverage/**
+src/test/**
