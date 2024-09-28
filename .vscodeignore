@@ -15,3 +15,4 @@ test/**
 jest.config.js
 coverage/**
 src/test/**
+setup_test_fixture.ts

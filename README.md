@@ -96,6 +96,14 @@ To run the tests with coverage for this extension, follow these steps:
 
 4. The coverage percentage is also displayed in the console output and updated in the README badge automatically.
 
+5. Latest coverage results:
+   - Statement coverage: 53.26%
+   - Branch coverage: 54.54%
+   - Function coverage: 66.66%
+   - Line coverage: 53.84%
+
+   These results indicate that while the extension has good function coverage, there's room for improvement in statement, branch, and line coverage. Consider adding more test cases to increase overall coverage and improve the robustness of the extension.
+
 ## Enhancing the Test Fixture Structure
 
 To improve the test fixture structure for this extension, consider the following guidelines:
@@ -119,6 +127,31 @@ To improve the test fixture structure for this extension, consider the following
 9. **Consistency**: Maintain a consistent structure across your fixtures to make it easier for developers to understand and extend the test suite.
 
 By following these guidelines, you can create a more robust and maintainable test fixture structure, which in turn leads to more reliable and comprehensive testing of the Moinsen Flutter extension.
+
+## Test Fixture Setup Script
+
+The `setup_test_fixture.sh` script is a crucial component in preparing the test environment for the Moinsen Flutter extension. This shell script automates the process of setting up test fixtures, ensuring consistency and reliability in the testing process. Here's an overview of its purpose and functionality:
+
+1. **Purpose**: The script creates a standardized test environment by generating a mock Flutter project structure with various files and directories that the extension will interact with during testing.
+
+2. **Location**: The script is located in the root directory of the project.
+
+3. **Execution**: To run the script, use the following command in the terminal:
+   ```
+   ./setup_test_fixture.sh
+   ```
+
+4. **Functionality**:
+   - Creates a directory structure mimicking a typical Flutter project.
+   - Generates mock Dart files with basic content to simulate real project files.
+   - Sets up special cases like ignored folders and files with specific naming patterns.
+   - Prepares different scenarios to test various aspects of the extension's functionality.
+
+5. **Usage in Testing**: The test suite uses the environment created by this script to verify the behavior of the Moinsen Flutter extension in different scenarios.
+
+6. **Maintenance**: When adding new test cases or modifying existing ones, update this script accordingly to ensure the test fixtures remain relevant and comprehensive.
+
+By utilizing this setup script, we ensure that all developers and CI/CD pipelines work with the same test environment, leading to more reliable and reproducible test results.
 
 ## Deployment
 
