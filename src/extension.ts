@@ -5,7 +5,7 @@ import * as vscode from 'vscode';
 /**
  * List of folders to ignore during _index.dart generation and removal.
  */
-const listOfIgnoreIndexGenFolder = ['build', 'ios', 'android', 'linux', 'macos', 'web', 'windows'];
+const listOfIgnoreIndexGenFolder = ['test', 'bin', 'build', 'ios', 'android', 'linux', 'macos', 'web', 'windows'];
 
 /**
  * List of filenames to ignore during _index.dart generation.
@@ -38,6 +38,15 @@ function shouldSkip(file: string): boolean {
         listOfIgnoreIndexFilenames.includes(file) ||
         baseName.includes('.')
     );
+}
+
+/**
+ * Checks if the given directory contains a pubspec.yaml file.
+ * @param dir The directory path to check.
+ * @returns True if pubspec.yaml is present, false otherwise.
+ */
+function hasPubspecYaml(dir: string): boolean {
+    return fs.existsSync(path.join(dir, 'pubspec.yaml'));
 }
 
 /**
@@ -99,11 +108,17 @@ export function deactivate() {}
 /**
  * Recursively generates or updates _index.dart files for the given directory.
  * If a subdirectory has an _index.dart, it includes it in the parent _index.dart.
+ * Skips generating _index.dart in directories containing pubspec.yaml.
  * @param dir The directory path.
  * @param summary Object to keep track of generated and updated files.
  * @returns A boolean indicating whether an _index.dart was created or updated in this directory.
  */
 async function generateIndexFiles(dir: string, summary: { generated: number; updated: number; }): Promise<boolean> {
+    // Skip generating _index.dart if pubspec.yaml is present
+    if (hasPubspecYaml(dir)) {
+        return false;
+    }
+
     const files = fs.readdirSync(dir);
     const dartFiles: string[] = [];
     const subDirs: string[] = [];
