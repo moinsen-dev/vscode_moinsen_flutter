@@ -5,6 +5,10 @@ All notable changes to the "Moinsen Flutter" extension will be documented in thi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2023-06-05
+### Changed
+- Modified _index.dart generation to exclude Dart files with the same name as their parent folder
+
 ## [0.2.4] - 2023-06-04
  - Fixed, the first steps with every new extension are always the hardest
 

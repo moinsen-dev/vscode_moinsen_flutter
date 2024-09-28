@@ -106,45 +106,40 @@ export function activate(context: vscode.ExtensionContext) {
 export function deactivate() {}
 
 /**
+ * Gets all allowed subfolders in a directory.
+ * @param dir The directory path.
+ * @returns An array of allowed subfolder paths.
+ */
+export function getAllowedSubfolders(dir: string): string[] {
+    return fs.readdirSync(dir)
+        .map(file => path.join(dir, file))
+        .filter(fullPath => fs.statSync(fullPath).isDirectory() && !isIgnoredFolder(path.basename(fullPath)));
+}
+
+/**
  * Recursively generates or updates _index.dart files for the given directory.
- * If a subdirectory has an _index.dart, it includes it in the parent _index.dart.
- * Skips generating _index.dart in directories containing pubspec.yaml, but still processes subfolders.
+ * Uses a bottom-up approach, processing subdirectories first.
  * @param dir The directory path.
  * @param summary Object to keep track of generated and updated files.
  * @returns A boolean indicating whether any Dart files were found or processed in this directory or its subdirectories.
  */
-async function generateIndexFiles(dir: string, summary: { generated: number; updated: number; }): Promise<boolean> {
-    const files = fs.readdirSync(dir);
-    const dartFiles: string[] = [];
-    const subDirs: string[] = [];
+export async function generateIndexFiles(dir: string, summary?: { generated: number; updated: number; }): Promise<boolean> {
+    const localSummary = summary || { generated: 0, updated: 0 };
+    const subDirs = getAllowedSubfolders(dir);
     const subIndexExports: string[] = [];
-
-    // Separate Dart files and subdirectories, skipping ignored folders
-    files.forEach(file => {
-        const fullPath = path.join(dir, file);
-        const stats = fs.statSync(fullPath);
-        if (stats.isFile() && path.extname(file) === '.dart') {
-            if (!shouldSkip(file)) {
-                dartFiles.push(file);
-            }
-        } else if (stats.isDirectory()) {
-            const folderName = path.basename(fullPath);
-            if (!isIgnoredFolder(folderName)) {
-                subDirs.push(fullPath);
-            }
-        }
-    });
-
     let hasProcessedDartFiles = false;
 
-    // Process subdirectories
+    // Process subdirectories first (bottom-up approach)
     for (const subDir of subDirs) {
-        const hasSubDirContent = await generateIndexFiles(subDir, summary);
+        const hasSubDirContent = await generateIndexFiles(subDir, localSummary);
         if (hasSubDirContent) {
             hasProcessedDartFiles = true;
             const subDirName = path.basename(subDir);
-            // Add export statement for subdirectory's _index.dart
-            subIndexExports.push(`export '${subDirName}/_index.dart';`);
+            const subIndexPath = path.join(subDir, '_index.dart');
+            // Only add export statement if _index.dart exists in the subdirectory
+            if (fs.existsSync(subIndexPath)) {
+                subIndexExports.push(`export '${subDirName}/_index.dart';`);
+            }
         }
     }
 
@@ -155,10 +150,16 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
         return subIndexExports.length > 0;
     }
 
-    // Check if there are any .dart files excluding _index.dart
-    const dartFilesExcludingIndex = dartFiles.filter(file => file !== '_index.dart');
+    // Process Dart files in the current directory
+    const currentFolderName = path.basename(dir);
+    const dartFiles = fs.readdirSync(dir)
+        .filter(file => path.extname(file) === '.dart' && !shouldSkip(file) && file !== '_index.dart');
+
     let indexPath = path.join(dir, '_index.dart');
-    let exportLines = dartFilesExcludingIndex.map(file => `export '${file}';`).join('\n');
+    let exportLines = dartFiles
+        .filter(file => path.basename(file, '.dart') !== currentFolderName) // New condition
+        .map(file => `export '${file}';`)
+        .join('\n');
 
     // Include exports for subdirectories' _index.dart
     if (subIndexExports.length > 0) {
@@ -166,7 +167,7 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
     }
 
     // If there are exports to write, generate or update the _index.dart file
-    if (dartFilesExcludingIndex.length > 0 || subIndexExports.length > 0) {
+    if (exportLines.trim().length > 0) {
         hasProcessedDartFiles = true;
         // Prepare the comment block with timestamp
         const timestamp = new Date().toLocaleString();
@@ -179,10 +180,10 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
 
         if (fs.existsSync(indexPath)) {
             fs.writeFileSync(indexPath, content, { encoding: 'utf8' });
-            summary.updated += 1;
+            localSummary.updated += 1;
         } else {
             fs.writeFileSync(indexPath, content, { encoding: 'utf8' });
-            summary.generated += 1;
+            localSummary.generated += 1;
         }
     }
 
@@ -195,21 +196,8 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
  * @param dir The directory path.
  * @param summary Object to keep track of removed and updated files.
  */
-async function removeIndexFiles(dir: string, summary: { removed: number; updated: number; }): Promise<void> {
-    const files = fs.readdirSync(dir);
-    const subDirs: string[] = [];
-
-    // Separate subdirectories, skipping ignored folders
-    files.forEach(file => {
-        const fullPath = path.join(dir, file);
-        const stats = fs.statSync(fullPath);
-        if (stats.isDirectory()) {
-            const folderName = path.basename(fullPath);
-            if (!isIgnoredFolder(folderName)) {
-                subDirs.push(fullPath);
-            }
-        }
-    });
+export async function removeIndexFiles(dir: string, summary: { removed: number; updated: number; }): Promise<void> {
+    const subDirs = getAllowedSubfolders(dir);
 
     // Process subdirectories first
     for (const subDir of subDirs) {

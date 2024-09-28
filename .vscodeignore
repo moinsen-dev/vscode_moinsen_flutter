@@ -11,3 +11,6 @@ vsc-extension-quickstart.md
 **/.vscode-test.*
 features/**
 MEDIUM_BLOG_POST.md
+test/**
+jest.config.js
+coverage/**
