@@ -111,7 +111,7 @@ export function deactivate() {}
  * Skips generating _index.dart in directories containing pubspec.yaml, but still processes subfolders.
  * @param dir The directory path.
  * @param summary Object to keep track of generated and updated files.
- * @returns A boolean indicating whether an _index.dart was created or updated in this directory.
+ * @returns A boolean indicating whether any Dart files were found or processed in this directory or its subdirectories.
  */
 async function generateIndexFiles(dir: string, summary: { generated: number; updated: number; }): Promise<boolean> {
     const files = fs.readdirSync(dir);
@@ -135,10 +135,13 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
         }
     });
 
-    // Process subdirectories first
+    let hasProcessedDartFiles = false;
+
+    // Process subdirectories
     for (const subDir of subDirs) {
-        const hasIndex = await generateIndexFiles(subDir, summary);
-        if (hasIndex) {
+        const hasSubDirContent = await generateIndexFiles(subDir, summary);
+        if (hasSubDirContent) {
+            hasProcessedDartFiles = true;
             const subDirName = path.basename(subDir);
             // Add export statement for subdirectory's _index.dart
             subIndexExports.push(`export '${subDirName}/_index.dart';`);
@@ -164,6 +167,7 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
 
     // If there are exports to write, generate or update the _index.dart file
     if (dartFilesExcludingIndex.length > 0 || subIndexExports.length > 0) {
+        hasProcessedDartFiles = true;
         // Prepare the comment block with timestamp
         const timestamp = new Date().toLocaleString();
         const commentBlock = `/*
@@ -180,11 +184,9 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
             fs.writeFileSync(indexPath, content, { encoding: 'utf8' });
             summary.generated += 1;
         }
-
-        return true; // _index.dart was created or updated
-    } else {
-        return false; // No _index.dart in this directory
     }
+
+    return hasProcessedDartFiles;
 }
 
 /**
