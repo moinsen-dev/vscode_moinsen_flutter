@@ -108,17 +108,12 @@ export function deactivate() {}
 /**
  * Recursively generates or updates _index.dart files for the given directory.
  * If a subdirectory has an _index.dart, it includes it in the parent _index.dart.
- * Skips generating _index.dart in directories containing pubspec.yaml.
+ * Skips generating _index.dart in directories containing pubspec.yaml, but still processes subfolders.
  * @param dir The directory path.
  * @param summary Object to keep track of generated and updated files.
  * @returns A boolean indicating whether an _index.dart was created or updated in this directory.
  */
 async function generateIndexFiles(dir: string, summary: { generated: number; updated: number; }): Promise<boolean> {
-    // Skip generating _index.dart if pubspec.yaml is present
-    if (hasPubspecYaml(dir)) {
-        return false;
-    }
-
     const files = fs.readdirSync(dir);
     const dartFiles: string[] = [];
     const subDirs: string[] = [];
@@ -148,6 +143,13 @@ async function generateIndexFiles(dir: string, summary: { generated: number; upd
             // Add export statement for subdirectory's _index.dart
             subIndexExports.push(`export '${subDirName}/_index.dart';`);
         }
+    }
+
+    // Check if pubspec.yaml is present
+    if (hasPubspecYaml(dir)) {
+        // If pubspec.yaml is present, don't generate _index.dart for this folder
+        // but return true if there are subIndexExports (to include in parent _index.dart)
+        return subIndexExports.length > 0;
     }
 
     // Check if there are any .dart files excluding _index.dart

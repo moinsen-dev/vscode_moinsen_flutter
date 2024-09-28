@@ -2,7 +2,7 @@
   "name": "moinsen-flutter",
   "displayName": "Moinsen Flutter",
   "description": "Moinsen helps you with your Flutter stuff :-)",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "publisher": "MoinsenDevelopment",
   "repository": "https://github.com/moinsen-dev/vscode_moinsen_flutter",
   "engines": {
@@ -12,7 +12,7 @@
     "Other"
   ],
   "activationEvents": [],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
