@@ -1,7 +1,7 @@
 import assert from 'assert';
 import * as fs from 'fs';
 import * as path from 'path';
-import { generateIndexFiles, getAllowedSubfolders } from '../extension';
+import { generateIndexFiles } from '../createIndexOperations';
 
 jest.mock('vscode');
 

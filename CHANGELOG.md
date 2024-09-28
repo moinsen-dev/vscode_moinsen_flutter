@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.3.0] - 2023-06-05
 ### Changed
+- Code refactoring and cleanup, test coverage increased to nearly 100%
 - Modified _index.dart generation to exclude Dart files with the same name as their parent folder
 
 ## [0.2.4] - 2023-06-04

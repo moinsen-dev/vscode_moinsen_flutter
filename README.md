@@ -4,7 +4,7 @@
 ![Installs](https://img.shields.io/visual-studio-marketplace/i/MoinsenDevelopment.moinsen-flutter)
 ![Rating](https://img.shields.io/visual-studio-marketplace/r/MoinsenDevelopment.moinsen-flutter)
 ![License](https://img.shields.io/github/license/moinsen-dev/vscode_moinsen_flutter)
-![Coverage](https://img.shields.io/badge/coverage-53.84%25-yellow)
+![Coverage](https://img.shields.io/badge/coverage-67.07%25-yellow)
 
 Moinsen Flutter is a VSCode extension that simplifies the management of import statements in your Flutter projects by automating the creation and maintenance of `_index.dart` files.
 
@@ -97,12 +97,12 @@ To run the tests with coverage for this extension, follow these steps:
 4. The coverage percentage is also displayed in the console output and updated in the README badge automatically.
 
 5. Latest coverage results:
-   - Statement coverage: 53.26%
-   - Branch coverage: 54.54%
-   - Function coverage: 66.66%
-   - Line coverage: 53.84%
+   - Statement coverage: 67.07%
+   - Branch coverage: 72.00%
+   - Function coverage: 83.33%
+   - Line coverage: 67.90%
 
-   These results indicate that while the extension has good function coverage, there's room for improvement in statement, branch, and line coverage. Consider adding more test cases to increase overall coverage and improve the robustness of the extension.
+   These results show an improvement in overall coverage compared to the previous version. However, there's still room for enhancement, particularly in the removeIndexOperations.ts file, which has a low coverage of 14.28%. Consider adding more test cases for this file to improve the overall robustness of the extension.
 
 ## Enhancing the Test Fixture Structure
 
