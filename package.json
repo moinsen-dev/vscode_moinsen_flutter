@@ -2,7 +2,7 @@
   "name": "moinsen-flutter",
   "displayName": "Moinsen Flutter",
   "description": "Moinsen helps you with your Flutter stuff :-)",
-  "version": "0.1.2",
+  "version": "0.2.1",
   "publisher": "MoinsenDevelopment",
   "repository": "https://github.com/moinsen-dev/vscode_moinsen_flutter",
   "engines": {
@@ -32,6 +32,7 @@
     }
   },
   "scripts": {
+    "clean": "rm -rf out dist",
     "compile": "npm run check-types && node esbuild.js",
     "check-types": "tsc --noEmit",
     "watch": "npm-run-all -p watch:*",
