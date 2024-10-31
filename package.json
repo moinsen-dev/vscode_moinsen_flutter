@@ -2,7 +2,7 @@
   "name": "moinsen-flutter",
   "displayName": "Moinsen Flutter",
   "description": "Moinsen helps you with your Flutter stuff :-)",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "publisher": "MoinsenDevelopment",
   "repository": "https://github.com/moinsen-dev/vscode_moinsen_flutter",
   "engines": {
@@ -67,5 +67,8 @@
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "yaml": "^2.6.0"
   }
 }
